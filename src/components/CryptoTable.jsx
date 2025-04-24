@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchCryptoData, updateRandomData } from '../redux/cryptoSlice';
+import { updateRandomData } from '../redux/cryptoSlice';
 import { formatNumber } from '../utils/format';
 import { FaArrowUp, FaArrowDown } from 'react-icons/fa';
 import Chart7D from './Chart7D';
@@ -13,7 +13,7 @@ export default function CryptoTable() {
   const { assets, status, error } = useSelector((state) => state.crypto);
 
   useEffect(() => {
-    dispatch(fetchCryptoData());
+    // dispatch(fetchCryptoData());
     const interval = setInterval(() => dispatch(updateRandomData()), 1500);
     return () => clearInterval(interval);
   }, [dispatch]);
