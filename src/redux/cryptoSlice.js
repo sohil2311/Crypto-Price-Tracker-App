@@ -2,7 +2,7 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
 export const fetchCryptoData = createAsyncThunk('crypto/fetchCryptoData', async () => {
-  const res = await axios.get('http://localhost:5000/api/crypto');
+  const res = await axios.get('https://crypto-price-tracker-app-ecn5.onrender.com/api/crypto');
   return res.data.data; 
 });
 
