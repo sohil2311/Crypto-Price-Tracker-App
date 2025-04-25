@@ -3,43 +3,8 @@ import axios from 'axios';
 
 export const fetchCryptoData = createAsyncThunk('crypto/fetchCryptoData', async () => {
   const res = await axios.get('http://localhost:5000/api/crypto');
-  return res.data.data;
+  return res.data.data; 
 });
-
-// const mockData = [
-//   {
-//     id: 1,
-//     name: 'Bitcoin',
-//     symbol: 'BTC',
-//     circulating_supply: 19000000,
-//     quote: {
-//       USD: {
-//         price: 67000,
-//         percent_change_1h: 0.2,
-//         percent_change_24h: 1.5,
-//         percent_change_7d: 3.2,
-//         market_cap: 1300000000000,
-//         volume_24h: 30000000000,
-//       },
-//     },
-//   },
-//   {
-//     id: 1027,
-//     name: 'Ethereum',
-//     symbol: 'ETH',
-//     circulating_supply: 120000000,
-//     quote: {
-//       USD: {
-//         price: 3400,
-//         percent_change_1h: -0.1,
-//         percent_change_24h: 2.0,
-//         percent_change_7d: 4.5,
-//         market_cap: 400000000000,
-//         volume_24h: 20000000000,
-//       },
-//     },
-//   },
-// ];
 
 const cryptoSlice = createSlice({
   name: 'crypto',
@@ -67,8 +32,8 @@ const cryptoSlice = createSlice({
       })
       .addCase(fetchCryptoData.rejected, (state, action) => {
         state.status = 'failed';
-        state.assets = action.error.message;
         state.assets = [];
+        state.error = action.error.message;
       });
   },
 });

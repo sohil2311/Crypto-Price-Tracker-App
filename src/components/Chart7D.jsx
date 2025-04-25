@@ -1,35 +1,78 @@
-import { LineChart, Line, ResponsiveContainer, Tooltip } from "recharts";
+import { Line } from 'react-chartjs-2';
+import { useState, useEffect } from 'react';
+import {
+  Chart as ChartJS,
+  LineElement,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  Tooltip,
+} from 'chart.js';
 
-const generateRandomData = () => {
-  const data = [];
-  let price = Math.random() * 1000 + 100;
-  for (let i = 0; i < 7; i++) {
-    price += (Math.random() - 0.5) * 50;
-    data.push({ day: `Day ${i + 1}`, price: Number(price.toFixed(2)) });
-  }
-  return data;
-};
+ChartJS.register(LineElement, CategoryScale, LinearScale, PointElement, Tooltip);
 
 export default function Chart7D({ symbol }) {
-  const data = generateRandomData();
+  
+  const priceData = {
+    BTC: [15.2225779068124, 15.2489699903577, 15.241008714076, 15.361611300729, 15.424806358529, 15.3388903769875, 15.3824717550443, 15.435323585065],
+    ETH: [22.2345678, 22.4567890, 22.6789012, 22.8901234, 22.7654321, 22.8765432, 22.9123456, 23.1234567],
+    USDT: [1.000000, 1.000200, 1.000100, 1.000500, 1.000300, 1.000700, 1.000400, 1.000600],
+    XRP: [0.493234, 0.470123, 0.405678, 0.480900, 0.485600, 0.490100, 0.505200, 0.450300],
+    BNB: [314.55, 319.00, 320.45, 322.10, 328.00, 325.20, 326.45, 320.10],
+    SOL: [134.45, 138.23, 134.12, 140.50, 142.10, 143.80, 148.60, 147.30],
+    USDC: [1.100000, 1.000100, 1.000200, 1.200300, 1.000400, 1.000500, 1.300600, 1.0500700],
+    DOGE: [0.246789, 0.260000, 0.265400, 0.270500, 0.275600, 0.300100, 0.285700, 0.290300],
+    ADA: [1.323456, 1.25500, 1.528900, 1.330200, 1.832100, 1.395600, 1.330800, 1.340200],
+    TRX: [0.062656, 0.062800, 0.062100, 0.063400, 0.063800, 0.066100, 0.069300, 0.064600],
+    SUI: [7.894032, 7.900001, 7.909000, 7.910002, 7.915003, 7.920004, 7.925005, 7.930006],
+    LINK: [29.109976, 29.212345, 29.345678, 29.452789, 29.567890, 29.678901, 29.789012, 30.890123],
+    AVAX: [58.112233, 58.233444, 58.344555, 58.456666, 58.527777, 58.678888, 58.789999, 58.100000],
+    XLM: [0.269234, 0.278900, 0.280500, 0.283000, 0.285600, 0.284200, 0.289500, 0.290700],
+    LEO: [3.789032, 3.800222, 3.810223, 3.822500, 3.830600, 3.841700, 3.850900, 3.860100],
+    SHIB: [0.000019, 0.000020, 0.000018, 0.000022, 0.000023, 0.000026, 0.000025, 0.000028],
+    HBAR: [0.256789, 0.259000, 0.262400, 0.265100, 0.260000, 0.270500, 0.272700, 0.275100],
+    TON: [3.456789, 3.460200, 3.470200, 3.480300, 3.490000, 3.500500, 3.510600, 3.530700],
+    BCH: [577.899999, 579.600100, 580.200400, 582.000500, 583.300600, 584.600700, 585.100800, 587.200900],
+    DOT: [42.456089, 42.567890, 42.678901, 42.889012, 42.890123, 42.901234, 42.932345, 42.923456],
+  };
+
+  const prices = priceData[symbol.toUpperCase()] || [];
+
+  const isPositive = prices[prices.length - 1] >= prices[0];
+
+  const data = {
+    labels: prices.map((_, i) => i),
+    datasets: [
+      {
+        data: prices,
+        borderColor: isPositive ? '#22c55e' : '#ef4444',
+        backgroundColor: 'transparent',
+        tension: 0.3,
+        pointRadius: 0,
+      },
+    ],
+  };
+
+  const options = {
+    responsive: true,
+    maintainAspectRatio: false,
+    scales: {
+      x: { display: false },
+      y: { display: false },
+    },
+    plugins: {
+      legend: { display: false },
+      tooltip: { enabled: false },
+    },
+  };
 
   return (
-    <div className="w-[80px] h-[40px]">
-      <ResponsiveContainer width="100%" height="100%">
-        <LineChart data={data}>
-          <Tooltip
-            formatter={(val) => `$${val}`}
-            contentStyle={{ fontSize: "10px" }}
-          />
-          <Line
-            type="monotone"
-            dataKey="price"
-            stroke="#3b82f6"
-            strokeWidth={2}
-            dot={false}
-          />
-        </LineChart>
-      </ResponsiveContainer>
+    <div className="w-28 h-10">
+      {prices.length > 0 ? (
+        <Line data={data} options={options} />
+      ) : (
+        <div className="w-28 h-10 animate-pulse bg-gray-200 rounded" />
+      )}
     </div>
   );
 }

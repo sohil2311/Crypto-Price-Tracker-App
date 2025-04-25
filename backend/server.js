@@ -2,13 +2,16 @@ import express from 'express';
 import axios from 'axios';
 import cors from 'cors';
 import dotenv from 'dotenv';
+import NodeCache from 'node-cache';
 
-dotenv.config(); // ← This is required
+dotenv.config();
 
 const app = express();
+const PORT = 5000;
+
 app.use(cors());
 
-const PORT = 5000;
+const cache = new NodeCache({ stdTTL: 300 });
 
 app.get('/api/crypto', async (req, res) => {
   try {
@@ -20,16 +23,18 @@ app.get('/api/crypto', async (req, res) => {
         },
         params: {
           start: 1,
-          limit: 6,
+          limit: 20,
           convert: 'USD',
         },
       }
     );
     res.json(response.data);
   } catch (error) {
-    console.error(error.response?.data || error.message);
-    res.status(500).json({ error: 'Failed to fetch data' });
+    console.error('Error fetching data from CoinMarketCap:', error.response?.data || error.message);
+    res.status(500).json({ error: 'Failed to fetch data from CoinMarketCap' });
   }
 });
 
-app.listen(PORT, () => console.log(`Proxy server running on http://localhost:${PORT}`));
+app.listen(PORT, () => {
+  console.log(`🚀 Proxy server running on http://localhost:${PORT}`);
+});
